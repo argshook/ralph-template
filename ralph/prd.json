@@ -1,0 +1,9 @@
+[
+  {
+    "id": "ts-typecheck",
+    "title": "Ensure TypeScript and Fresh build with no errors",
+    "priority": 1,
+    "acceptanceCriteria": ["deno test", "deno task build"],
+    "passes": false
+  }
+]

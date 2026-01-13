@@ -1,0 +1,4 @@
+=== Ralph Loop Progress ===
+# App version: 0.1.0
+# RFC guidelines: keep logs append-only so the agent reads past learnings.
+
