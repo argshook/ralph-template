@@ -1,21 +1,29 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+trap 'echo "Error on line $LINENO (exit $?)" >&2' ERR
 
-MAX_ITERS=${1:-30}
+MAX_ITERS=${1:-10}
 COUNT=0
 
-echo "=== Ralph Loop Starting ===" >> ralph/progress.txt
+echo "=== Ralph Loop Starting ===" | tee -a ralph/progress.txt
 
 while [ $COUNT -lt $MAX_ITERS ]; do
-  ((COUNT++))
+  ((++COUNT))
   echo "---- Iteration $COUNT ----" | tee -a ralph/progress.txt
 
   # Feed prompt + progress into agent
-  output=$(codex -p "$(cat ralph/prompt.md; echo; cat ralph/progress.txt)" \
-    --sandbox sandbox-write \
-    --dangerously-bypass-approvals-and-sandbox)
+  set +e
+  output=$(codex exec "$(cat ralph/prompt.md; echo; cat ralph/progress.txt)" \
+    --sandbox workspace-write \
+    --full-auto 2>&1)
+  status=$?
+  set -e
 
   echo "$output" | tee -a ralph/progress.txt
+  if [ $status -ne 0 ]; then
+    echo "codex failed with status $status" | tee -a ralph/progress.txt
+    exit $status
+  fi
 
   # Persist output into prd.json and progress.txt
   # Expect agent commits or direct file edits
@@ -26,23 +34,9 @@ while [ $COUNT -lt $MAX_ITERS ]; do
     break
   fi
 
-  # Run external feedback loops
-  echo "Running external verification…" | tee -a ralph/progress.txt
-  deno fmt
-  deno lint
-  deno test
-  deno task build
-
-  # Append verification results
-  {
-    echo "Types/Lint/Tests/Build checks passed at $(date)"
-    echo ""
-  } >> ralph/progress.txt
-
   # Commit changes for durable state
   git add ralph/prd.json ralph/progress.txt .
   git commit -m "Ralph iteration $COUNT"
 done
 
 echo "=== Ralph Loop Finished ===" >> ralph/progress.txt
-

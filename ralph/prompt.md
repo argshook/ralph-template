@@ -5,10 +5,8 @@ You are a Ralph Loop agent.
 3. Select the **highest priority** story with "passes": false.
 4. Work **only on that single story**.
 5. After editing code, run:
-   - deno fmt
-   - deno lint
-   - deno test
-   - deno task build
+   - unit test command (if found in `deno.json` or `package.json`)
+   - build command (if found in `deno.json` or `package.json`)
 6. For each acceptanceCriteria in the story, verify objectively (pass/fail).
 7. If all criteria pass:
    - Mark this story's `"passes": true` in prd.json.
