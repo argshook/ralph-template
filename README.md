@@ -1,6 +1,10 @@
 # Ralph
 
-A tiny, single-agent loop runner that works through a PRD backlog.
+Codex agent loop-runner that works through a PRD backlog.
+
+<p align="center">
+  <img src="./ralph.webp" alt="Ralph logo" width="320"/>
+</p>
 
 ## What’s here
 
@@ -23,3 +27,6 @@ A tiny, single-agent loop runner that works through a PRD backlog.
 - open `codex` and submit `$to-prd your feature idea here`
 - codex will add the PRD entry to `prd.json`
 - run `sh ralph/loop.sh` to process the next item in the backlog
+
+> **Inspired by [Geoffrey Huntley](https://ghuntley.com/ralph/)**,
+> thanks!
