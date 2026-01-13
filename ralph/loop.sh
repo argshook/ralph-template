@@ -13,7 +13,7 @@ while [ $COUNT -lt $MAX_ITERS ]; do
   # Feed prompt + progress into agent
   output=$(codex -p "$(cat ralph/prompt.md; echo; cat ralph/progress.txt)" \
     --sandbox sandbox-write \
-    ----dangerously-bypass-approvals-and-sandbox)
+    --dangerously-bypass-approvals-and-sandbox)
 
   echo "$output" | tee -a ralph/progress.txt
 
